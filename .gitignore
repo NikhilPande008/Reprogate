@@ -1,0 +1,23 @@
+.venv/
+.pytest_cache/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.env
+triage.db
+artifacts/
+!demo/
+!demo/seed/
+!demo/seed/artifacts/
+!demo/seed/artifacts/**
+sandbox-workspaces/
+.DS_Store
+*.tsbuildinfo
+dashboard/node_modules/
+dashboard/dist/
+BUYER_DISCOVERY.md
+SUBMISSION_CHECKLIST.md
+
+# Internal-only material, excluded from the public submission repository.
+HACKATHON_GAP_CLOSURE_PROMPT.md
+go_to_market/

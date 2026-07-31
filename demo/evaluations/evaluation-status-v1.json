@@ -1,0 +1,14 @@
+{
+  "schema_version": "evaluation-status-v1",
+  "corpus_version": null,
+  "sample_size": 0,
+  "reviewer_count": 0,
+  "unresolved_cases": 0,
+  "measured_metrics": [],
+  "known_exclusions": [
+    "No frozen, representative accuracy corpus has been run.",
+    "No independent dual-review labels or adjudications have been collected.",
+    "The retrospective sample and seeded demonstrations are product examples, not evaluation evidence."
+  ],
+  "preliminary": true
+}

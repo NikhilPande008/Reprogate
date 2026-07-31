@@ -1,0 +1,8 @@
+FROM github-issue-triage:phase3-local
+
+WORKDIR /workspace/app
+COPY pyproject.toml ./
+COPY triage ./triage
+COPY migrations ./migrations
+COPY alembic.ini ./
+RUN uv pip install --system .

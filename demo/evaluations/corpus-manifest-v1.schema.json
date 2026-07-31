@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ReproGate frozen evaluation corpus v1",
+  "type": "object",
+  "required": ["schema_version", "corpus_version", "frozen_at", "selection_method", "inclusion_rules", "exclusion_rules", "strata", "cases"],
+  "properties": {
+    "schema_version": {"const": "evaluation-corpus-v1"},
+    "corpus_version": {"type": "string", "minLength": 1},
+    "frozen_at": {"type": "string", "format": "date-time"},
+    "selection_method": {"type": "string", "minLength": 1},
+    "inclusion_rules": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "exclusion_rules": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "strata": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "cases": {"type": "array", "items": {"type": "object", "required": ["case_id", "repository", "issue_number", "issue_url", "revision_sha", "issue_type"], "properties": {"case_id": {"type": "string"}, "repository": {"type": "string"}, "issue_number": {"type": "integer", "minimum": 1}, "issue_url": {"type": "string", "format": "uri"}, "revision_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "issue_type": {"type": "string"}}}}
+  }
+}

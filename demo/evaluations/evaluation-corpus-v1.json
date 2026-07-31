@@ -1,0 +1,504 @@
+{
+  "schema_version": "evaluation-corpus-v1",
+  "corpus_version": "evaluation-corpus-v1",
+  "frozen_at": "2026-07-25T16:26:00.871005Z",
+  "selection_method": "Public GitHub issue-only search frame; sorted deterministic sample of eight issues per repository using seed 20260725. encode/httpx was excluded before freeze because its initial captured repository frame had fewer than eight eligible issues; pytest-dev/pytest replaced it before any system run.",
+  "inclusion_rules": [
+    "Public issue",
+    "repository supports pytest",
+    "default-branch revision pinned at capture"
+  ],
+  "exclusion_rules": [
+    "Pull request",
+    "private or restricted issue",
+    "unavailable pinned revision",
+    "repository frame with fewer than eight eligible issues"
+  ],
+  "strata": [
+    "repository",
+    "issue_type",
+    "state_at_capture"
+  ],
+  "cases": [
+    {
+      "case_id": "psf-requests-7048",
+      "repository": "psf/requests",
+      "issue_number": 7048,
+      "issue_url": "https://github.com/psf/requests/issues/7048",
+      "revision_sha": "69f84847045bef7a849cc994a26fe7ba8a169e95",
+      "issue_type": "incomplete_or_needs_info",
+      "state_at_capture": "closed",
+      "selection_stratum": "psf/requests"
+    },
+    {
+      "case_id": "psf-requests-7118",
+      "repository": "psf/requests",
+      "issue_number": 7118,
+      "issue_url": "https://github.com/psf/requests/issues/7118",
+      "revision_sha": "69f84847045bef7a849cc994a26fe7ba8a169e95",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "psf/requests"
+    },
+    {
+      "case_id": "psf-requests-7154",
+      "repository": "psf/requests",
+      "issue_number": 7154,
+      "issue_url": "https://github.com/psf/requests/issues/7154",
+      "revision_sha": "69f84847045bef7a849cc994a26fe7ba8a169e95",
+      "issue_type": "feature_request",
+      "state_at_capture": "closed",
+      "selection_stratum": "psf/requests"
+    },
+    {
+      "case_id": "psf-requests-7164",
+      "repository": "psf/requests",
+      "issue_number": 7164,
+      "issue_url": "https://github.com/psf/requests/issues/7164",
+      "revision_sha": "69f84847045bef7a849cc994a26fe7ba8a169e95",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "psf/requests"
+    },
+    {
+      "case_id": "psf-requests-7271",
+      "repository": "psf/requests",
+      "issue_number": 7271,
+      "issue_url": "https://github.com/psf/requests/issues/7271",
+      "revision_sha": "69f84847045bef7a849cc994a26fe7ba8a169e95",
+      "issue_type": "feature_request",
+      "state_at_capture": "closed",
+      "selection_stratum": "psf/requests"
+    },
+    {
+      "case_id": "psf-requests-7324",
+      "repository": "psf/requests",
+      "issue_number": 7324,
+      "issue_url": "https://github.com/psf/requests/issues/7324",
+      "revision_sha": "69f84847045bef7a849cc994a26fe7ba8a169e95",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "psf/requests"
+    },
+    {
+      "case_id": "psf-requests-7456",
+      "repository": "psf/requests",
+      "issue_number": 7456,
+      "issue_url": "https://github.com/psf/requests/issues/7456",
+      "revision_sha": "69f84847045bef7a849cc994a26fe7ba8a169e95",
+      "issue_type": "feature_request",
+      "state_at_capture": "closed",
+      "selection_stratum": "psf/requests"
+    },
+    {
+      "case_id": "psf-requests-7594",
+      "repository": "psf/requests",
+      "issue_number": 7594,
+      "issue_url": "https://github.com/psf/requests/issues/7594",
+      "revision_sha": "69f84847045bef7a849cc994a26fe7ba8a169e95",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "psf/requests"
+    },
+    {
+      "case_id": "openai-openai-python-2919",
+      "repository": "openai/openai-python",
+      "issue_number": 2919,
+      "issue_url": "https://github.com/openai/openai-python/issues/2919",
+      "revision_sha": "d4c151d92ba713e56518a4483d3b7918dd1be838",
+      "issue_type": "environment_setup",
+      "state_at_capture": "open",
+      "selection_stratum": "openai/openai-python"
+    },
+    {
+      "case_id": "openai-openai-python-3011",
+      "repository": "openai/openai-python",
+      "issue_number": 3011,
+      "issue_url": "https://github.com/openai/openai-python/issues/3011",
+      "revision_sha": "d4c151d92ba713e56518a4483d3b7918dd1be838",
+      "issue_type": "confirmable_bug_report",
+      "state_at_capture": "open",
+      "selection_stratum": "openai/openai-python"
+    },
+    {
+      "case_id": "openai-openai-python-3248",
+      "repository": "openai/openai-python",
+      "issue_number": 3248,
+      "issue_url": "https://github.com/openai/openai-python/issues/3248",
+      "revision_sha": "d4c151d92ba713e56518a4483d3b7918dd1be838",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "openai/openai-python"
+    },
+    {
+      "case_id": "openai-openai-python-3258",
+      "repository": "openai/openai-python",
+      "issue_number": 3258,
+      "issue_url": "https://github.com/openai/openai-python/issues/3258",
+      "revision_sha": "d4c151d92ba713e56518a4483d3b7918dd1be838",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "openai/openai-python"
+    },
+    {
+      "case_id": "openai-openai-python-3294",
+      "repository": "openai/openai-python",
+      "issue_number": 3294,
+      "issue_url": "https://github.com/openai/openai-python/issues/3294",
+      "revision_sha": "d4c151d92ba713e56518a4483d3b7918dd1be838",
+      "issue_type": "confirmable_bug_report",
+      "state_at_capture": "open",
+      "selection_stratum": "openai/openai-python"
+    },
+    {
+      "case_id": "openai-openai-python-3313",
+      "repository": "openai/openai-python",
+      "issue_number": 3313,
+      "issue_url": "https://github.com/openai/openai-python/issues/3313",
+      "revision_sha": "d4c151d92ba713e56518a4483d3b7918dd1be838",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "open",
+      "selection_stratum": "openai/openai-python"
+    },
+    {
+      "case_id": "openai-openai-python-3338",
+      "repository": "openai/openai-python",
+      "issue_number": 3338,
+      "issue_url": "https://github.com/openai/openai-python/issues/3338",
+      "revision_sha": "d4c151d92ba713e56518a4483d3b7918dd1be838",
+      "issue_type": "confirmable_bug_report",
+      "state_at_capture": "open",
+      "selection_stratum": "openai/openai-python"
+    },
+    {
+      "case_id": "openai-openai-python-3464",
+      "repository": "openai/openai-python",
+      "issue_number": 3464,
+      "issue_url": "https://github.com/openai/openai-python/issues/3464",
+      "revision_sha": "d4c151d92ba713e56518a4483d3b7918dd1be838",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "openai/openai-python"
+    },
+    {
+      "case_id": "pydantic-pydantic-13030",
+      "repository": "pydantic/pydantic",
+      "issue_number": 13030,
+      "issue_url": "https://github.com/pydantic/pydantic/issues/13030",
+      "revision_sha": "a2a6577d4c329dd574a45dbb01a8feaa16b1ad3d",
+      "issue_type": "confirmable_bug_report",
+      "state_at_capture": "closed",
+      "selection_stratum": "pydantic/pydantic"
+    },
+    {
+      "case_id": "pydantic-pydantic-13113",
+      "repository": "pydantic/pydantic",
+      "issue_number": 13113,
+      "issue_url": "https://github.com/pydantic/pydantic/issues/13113",
+      "revision_sha": "a2a6577d4c329dd574a45dbb01a8feaa16b1ad3d",
+      "issue_type": "feature_request",
+      "state_at_capture": "open",
+      "selection_stratum": "pydantic/pydantic"
+    },
+    {
+      "case_id": "pydantic-pydantic-13136",
+      "repository": "pydantic/pydantic",
+      "issue_number": 13136,
+      "issue_url": "https://github.com/pydantic/pydantic/issues/13136",
+      "revision_sha": "a2a6577d4c329dd574a45dbb01a8feaa16b1ad3d",
+      "issue_type": "environment_setup",
+      "state_at_capture": "closed",
+      "selection_stratum": "pydantic/pydantic"
+    },
+    {
+      "case_id": "pydantic-pydantic-13169",
+      "repository": "pydantic/pydantic",
+      "issue_number": 13169,
+      "issue_url": "https://github.com/pydantic/pydantic/issues/13169",
+      "revision_sha": "a2a6577d4c329dd574a45dbb01a8feaa16b1ad3d",
+      "issue_type": "feature_request",
+      "state_at_capture": "open",
+      "selection_stratum": "pydantic/pydantic"
+    },
+    {
+      "case_id": "pydantic-pydantic-13236",
+      "repository": "pydantic/pydantic",
+      "issue_number": 13236,
+      "issue_url": "https://github.com/pydantic/pydantic/issues/13236",
+      "revision_sha": "a2a6577d4c329dd574a45dbb01a8feaa16b1ad3d",
+      "issue_type": "feature_request",
+      "state_at_capture": "closed",
+      "selection_stratum": "pydantic/pydantic"
+    },
+    {
+      "case_id": "pydantic-pydantic-13327",
+      "repository": "pydantic/pydantic",
+      "issue_number": 13327,
+      "issue_url": "https://github.com/pydantic/pydantic/issues/13327",
+      "revision_sha": "a2a6577d4c329dd574a45dbb01a8feaa16b1ad3d",
+      "issue_type": "confirmable_bug_report",
+      "state_at_capture": "open",
+      "selection_stratum": "pydantic/pydantic"
+    },
+    {
+      "case_id": "pydantic-pydantic-13360",
+      "repository": "pydantic/pydantic",
+      "issue_number": 13360,
+      "issue_url": "https://github.com/pydantic/pydantic/issues/13360",
+      "revision_sha": "a2a6577d4c329dd574a45dbb01a8feaa16b1ad3d",
+      "issue_type": "feature_request",
+      "state_at_capture": "open",
+      "selection_stratum": "pydantic/pydantic"
+    },
+    {
+      "case_id": "pydantic-pydantic-13471",
+      "repository": "pydantic/pydantic",
+      "issue_number": 13471,
+      "issue_url": "https://github.com/pydantic/pydantic/issues/13471",
+      "revision_sha": "a2a6577d4c329dd574a45dbb01a8feaa16b1ad3d",
+      "issue_type": "confirmable_bug_report",
+      "state_at_capture": "open",
+      "selection_stratum": "pydantic/pydantic"
+    },
+    {
+      "case_id": "pallets-flask-5662",
+      "repository": "pallets/flask",
+      "issue_number": 5662,
+      "issue_url": "https://github.com/pallets/flask/issues/5662",
+      "revision_sha": "36e4a824f340fdee7ed50937ba8e7f6bc7d17f81",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "pallets/flask"
+    },
+    {
+      "case_id": "pallets-flask-5707",
+      "repository": "pallets/flask",
+      "issue_number": 5707,
+      "issue_url": "https://github.com/pallets/flask/issues/5707",
+      "revision_sha": "36e4a824f340fdee7ed50937ba8e7f6bc7d17f81",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "pallets/flask"
+    },
+    {
+      "case_id": "pallets-flask-5718",
+      "repository": "pallets/flask",
+      "issue_number": 5718,
+      "issue_url": "https://github.com/pallets/flask/issues/5718",
+      "revision_sha": "36e4a824f340fdee7ed50937ba8e7f6bc7d17f81",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "pallets/flask"
+    },
+    {
+      "case_id": "pallets-flask-5721",
+      "repository": "pallets/flask",
+      "issue_number": 5721,
+      "issue_url": "https://github.com/pallets/flask/issues/5721",
+      "revision_sha": "36e4a824f340fdee7ed50937ba8e7f6bc7d17f81",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "pallets/flask"
+    },
+    {
+      "case_id": "pallets-flask-5839",
+      "repository": "pallets/flask",
+      "issue_number": 5839,
+      "issue_url": "https://github.com/pallets/flask/issues/5839",
+      "revision_sha": "36e4a824f340fdee7ed50937ba8e7f6bc7d17f81",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "pallets/flask"
+    },
+    {
+      "case_id": "pallets-flask-5915",
+      "repository": "pallets/flask",
+      "issue_number": 5915,
+      "issue_url": "https://github.com/pallets/flask/issues/5915",
+      "revision_sha": "36e4a824f340fdee7ed50937ba8e7f6bc7d17f81",
+      "issue_type": "incomplete_or_needs_info",
+      "state_at_capture": "closed",
+      "selection_stratum": "pallets/flask"
+    },
+    {
+      "case_id": "pallets-flask-5948",
+      "repository": "pallets/flask",
+      "issue_number": 5948,
+      "issue_url": "https://github.com/pallets/flask/issues/5948",
+      "revision_sha": "36e4a824f340fdee7ed50937ba8e7f6bc7d17f81",
+      "issue_type": "environment_setup",
+      "state_at_capture": "closed",
+      "selection_stratum": "pallets/flask"
+    },
+    {
+      "case_id": "pallets-flask-6093",
+      "repository": "pallets/flask",
+      "issue_number": 6093,
+      "issue_url": "https://github.com/pallets/flask/issues/6093",
+      "revision_sha": "36e4a824f340fdee7ed50937ba8e7f6bc7d17f81",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "open",
+      "selection_stratum": "pallets/flask"
+    },
+    {
+      "case_id": "pytest-dev-pytest-14253",
+      "repository": "pytest-dev/pytest",
+      "issue_number": 14253,
+      "issue_url": "https://github.com/pytest-dev/pytest/issues/14253",
+      "revision_sha": "36704f9b54c40b3de715f5d5d28666faf566b843",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "pytest-dev/pytest"
+    },
+    {
+      "case_id": "pytest-dev-pytest-14324",
+      "repository": "pytest-dev/pytest",
+      "issue_number": 14324,
+      "issue_url": "https://github.com/pytest-dev/pytest/issues/14324",
+      "revision_sha": "36704f9b54c40b3de715f5d5d28666faf566b843",
+      "issue_type": "confirmable_bug_report",
+      "state_at_capture": "open",
+      "selection_stratum": "pytest-dev/pytest"
+    },
+    {
+      "case_id": "pytest-dev-pytest-14334",
+      "repository": "pytest-dev/pytest",
+      "issue_number": 14334,
+      "issue_url": "https://github.com/pytest-dev/pytest/issues/14334",
+      "revision_sha": "36704f9b54c40b3de715f5d5d28666faf566b843",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "pytest-dev/pytest"
+    },
+    {
+      "case_id": "pytest-dev-pytest-14476",
+      "repository": "pytest-dev/pytest",
+      "issue_number": 14476,
+      "issue_url": "https://github.com/pytest-dev/pytest/issues/14476",
+      "revision_sha": "36704f9b54c40b3de715f5d5d28666faf566b843",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "pytest-dev/pytest"
+    },
+    {
+      "case_id": "pytest-dev-pytest-14483",
+      "repository": "pytest-dev/pytest",
+      "issue_number": 14483,
+      "issue_url": "https://github.com/pytest-dev/pytest/issues/14483",
+      "revision_sha": "36704f9b54c40b3de715f5d5d28666faf566b843",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "pytest-dev/pytest"
+    },
+    {
+      "case_id": "pytest-dev-pytest-14591",
+      "repository": "pytest-dev/pytest",
+      "issue_number": 14591,
+      "issue_url": "https://github.com/pytest-dev/pytest/issues/14591",
+      "revision_sha": "36704f9b54c40b3de715f5d5d28666faf566b843",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "pytest-dev/pytest"
+    },
+    {
+      "case_id": "pytest-dev-pytest-14675",
+      "repository": "pytest-dev/pytest",
+      "issue_number": 14675,
+      "issue_url": "https://github.com/pytest-dev/pytest/issues/14675",
+      "revision_sha": "36704f9b54c40b3de715f5d5d28666faf566b843",
+      "issue_type": "feature_request",
+      "state_at_capture": "open",
+      "selection_stratum": "pytest-dev/pytest"
+    },
+    {
+      "case_id": "pytest-dev-pytest-14775",
+      "repository": "pytest-dev/pytest",
+      "issue_number": 14775,
+      "issue_url": "https://github.com/pytest-dev/pytest/issues/14775",
+      "revision_sha": "36704f9b54c40b3de715f5d5d28666faf566b843",
+      "issue_type": "confirmable_bug_report",
+      "state_at_capture": "open",
+      "selection_stratum": "pytest-dev/pytest"
+    },
+    {
+      "case_id": "fastapi-fastapi-13316",
+      "repository": "fastapi/fastapi",
+      "issue_number": 13316,
+      "issue_url": "https://github.com/fastapi/fastapi/issues/13316",
+      "revision_sha": "255b912928904e3ba5980425a54d6837c8bd1a1c",
+      "issue_type": "environment_setup",
+      "state_at_capture": "closed",
+      "selection_stratum": "fastapi/fastapi"
+    },
+    {
+      "case_id": "fastapi-fastapi-14344",
+      "repository": "fastapi/fastapi",
+      "issue_number": 14344,
+      "issue_url": "https://github.com/fastapi/fastapi/issues/14344",
+      "revision_sha": "255b912928904e3ba5980425a54d6837c8bd1a1c",
+      "issue_type": "confirmable_bug_report",
+      "state_at_capture": "closed",
+      "selection_stratum": "fastapi/fastapi"
+    },
+    {
+      "case_id": "fastapi-fastapi-14444",
+      "repository": "fastapi/fastapi",
+      "issue_number": 14444,
+      "issue_url": "https://github.com/fastapi/fastapi/issues/14444",
+      "revision_sha": "255b912928904e3ba5980425a54d6837c8bd1a1c",
+      "issue_type": "confirmable_bug_report",
+      "state_at_capture": "closed",
+      "selection_stratum": "fastapi/fastapi"
+    },
+    {
+      "case_id": "fastapi-fastapi-14494",
+      "repository": "fastapi/fastapi",
+      "issue_number": 14494,
+      "issue_url": "https://github.com/fastapi/fastapi/issues/14494",
+      "revision_sha": "255b912928904e3ba5980425a54d6837c8bd1a1c",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "fastapi/fastapi"
+    },
+    {
+      "case_id": "fastapi-fastapi-15085",
+      "repository": "fastapi/fastapi",
+      "issue_number": 15085,
+      "issue_url": "https://github.com/fastapi/fastapi/issues/15085",
+      "revision_sha": "255b912928904e3ba5980425a54d6837c8bd1a1c",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "fastapi/fastapi"
+    },
+    {
+      "case_id": "fastapi-fastapi-15578",
+      "repository": "fastapi/fastapi",
+      "issue_number": 15578,
+      "issue_url": "https://github.com/fastapi/fastapi/issues/15578",
+      "revision_sha": "255b912928904e3ba5980425a54d6837c8bd1a1c",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "fastapi/fastapi"
+    },
+    {
+      "case_id": "fastapi-fastapi-15680",
+      "repository": "fastapi/fastapi",
+      "issue_number": 15680,
+      "issue_url": "https://github.com/fastapi/fastapi/issues/15680",
+      "revision_sha": "255b912928904e3ba5980425a54d6837c8bd1a1c",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "fastapi/fastapi"
+    },
+    {
+      "case_id": "fastapi-fastapi-15738",
+      "repository": "fastapi/fastapi",
+      "issue_number": 15738,
+      "issue_url": "https://github.com/fastapi/fastapi/issues/15738",
+      "revision_sha": "255b912928904e3ba5980425a54d6837c8bd1a1c",
+      "issue_type": "ambiguous_or_mixed",
+      "state_at_capture": "closed",
+      "selection_stratum": "fastapi/fastapi"
+    }
+  ]
+}
