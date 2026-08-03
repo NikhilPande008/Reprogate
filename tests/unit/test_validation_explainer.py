@@ -26,7 +26,12 @@ def test_modern_confirmed_explainer_requires_all_persisted_gates(tmp_path) -> No
 def test_rejected_and_legacy_explanations_do_not_invent_modern_evidence(tmp_path) -> None:
     investigation = Investigation(id="legacy", repository="owner/repo", issue_number=2, test_runner="pytest", status=InvestigationStatus.COMPLETED, classification=Classification.BEHAVIOR_GAP_CONFIRMED, asserts_failure=True)
     result = explain(investigation, [])
-    assert result["conclusion"] == "BEHAVIOR_GAP_NOT_ESTABLISHED"
+    # A retained confirmation with no reconstructible artifacts is reported as
+    # incomplete provenance, not as a refutation of its own stored verdict.
+    assert result["conclusion"] == "LEGACY_EVIDENCE_INCOMPLETE"
+    assert result["stored_classification"] == "BEHAVIOR_GAP_CONFIRMED"
+    assert result["passed_checks"] == 0
+    assert result["total_checks"] == 7
     assert result["checks"][0]["status"] == "UNAVAILABLE"
     assert result["checks"][1]["status"] == "UNAVAILABLE"
     assert result["checks"][-2]["status"] == "NOT_APPLICABLE"

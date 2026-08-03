@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from triage.domain.enums import Classification
 from triage.persistence.models import Artifact, Investigation
 from triage.runners import select_runner
 from triage.validation.diff import analyze_diff
@@ -133,4 +134,22 @@ def explain(investigation: Investigation, artifacts: list[Artifact]) -> dict[str
     # Proof integrity was introduced after historical confirmations. It is a
     # required live gate, but its absence must not rewrite persisted verdicts.
     established = investigation.asserts_failure and all(item["status"] == "PASS" for item in core_checks)
-    return {"version": "deterministic-validator-v1", "conclusion": "BEHAVIOR_GAP_CONFIRMED" if established else "BEHAVIOR_GAP_NOT_ESTABLISHED", "checks": checks}
+    # A retained confirmation whose gate artifacts predate structured capture is
+    # not the same claim as one this validator actively refuted. Reporting both
+    # as "not established" makes a record contradict its own stored verdict.
+    refuted = any(item["status"] == "FAIL" for item in checks)
+    stored_confirmation = investigation.classification == Classification.BEHAVIOR_GAP_CONFIRMED
+    if established:
+        conclusion = "BEHAVIOR_GAP_CONFIRMED"
+    elif refuted or not stored_confirmation:
+        conclusion = "BEHAVIOR_GAP_NOT_ESTABLISHED"
+    else:
+        conclusion = "LEGACY_EVIDENCE_INCOMPLETE"
+    return {
+        "version": "deterministic-validator-v1",
+        "conclusion": conclusion,
+        "stored_classification": investigation.classification.value if investigation.classification else None,
+        "passed_checks": sum(1 for item in checks if item["status"] == "PASS"),
+        "total_checks": len(checks),
+        "checks": checks,
+    }
