@@ -342,6 +342,79 @@ def _has_jest(package: dict) -> bool:
     return "jest" in package.get("devDependencies", {}) or "jest" in package.get("dependencies", {})
 
 
+@dataclass(frozen=True)
+class RunnerCapability:
+    """Declared confirmation capability for one adapter.
+
+    Kept beside the adapters so the published matrix cannot drift away from the
+    selector that actually runs. `confirmation_capable` means only that this
+    runner can reach `BEHAVIOR_GAP_CONFIRMED` when every deterministic gate
+    passes; it is never a claim about a specific investigation.
+    """
+
+    runner_id: str
+    implemented: bool
+    confirmation_capable: bool
+    selection_precision: str
+    structured_results: str
+    summary: str
+    constraint: str
+
+
+RUNNER_CAPABILITIES: tuple[RunnerCapability, ...] = (
+    RunnerCapability(
+        "pytest", True, True, "EXACT",
+        "JUnit XML required for validation",
+        "Default runner. AST-derived exact changed-test nodes map to matching JUnit testcases.",
+        "Requires a resolvable setup command; PEP 735 dependency groups may need SANDBOX_SETUP_COMMAND.",
+    ),
+    RunnerCapability(
+        "vitest", True, True, "EXACT for a conservative static top-level subset",
+        "JUnit reporter required for validation",
+        "Confirmation-capable only when changed assertion lines map to static top-level test names.",
+        "Nested, parameterized, dynamic, or otherwise ambiguous tests fall back to FILE_ONLY and stay diagnostic-only.",
+    ),
+    RunnerCapability(
+        "jest", True, False, "FILE_ONLY",
+        "Not mapped to structured validation",
+        "Runs and records setup and target diagnostics, but cannot reach a behavior-gap confirmation.",
+        "Exact test-name selection and trustworthy JUnit mapping are not implemented; selection stays FILE_ONLY by design.",
+    ),
+    RunnerCapability(
+        "cargo", False, False, "UNAVAILABLE", "Not implemented",
+        "Not implemented. Selecting it fails rather than guessing.", "Future adapter target.",
+    ),
+    RunnerCapability(
+        "go", False, False, "UNAVAILABLE", "Not implemented",
+        "Not implemented. Selecting it fails rather than guessing.", "Future adapter target.",
+    ),
+    RunnerCapability(
+        "junit-java", False, False, "UNAVAILABLE", "Not implemented",
+        "Not implemented. Selecting it fails rather than guessing.", "Future adapter target.",
+    ),
+    RunnerCapability(
+        "rspec", False, False, "UNAVAILABLE", "Not implemented",
+        "Not implemented. Selecting it fails rather than guessing.", "Future adapter target.",
+    ),
+)
+
+
+def runner_capabilities() -> list[dict[str, object]]:
+    """Return the declared capability matrix as serializable records."""
+    return [
+        {
+            "runner_id": item.runner_id,
+            "implemented": item.implemented,
+            "confirmation_capable": item.confirmation_capable,
+            "selection_precision": item.selection_precision,
+            "structured_results": item.structured_results,
+            "summary": item.summary,
+            "constraint": item.constraint,
+        }
+        for item in RUNNER_CAPABILITIES
+    ]
+
+
 def select_runner(configured: str, repository_path: Path | None = None) -> RunnerAdapter:
     adapters = {"pytest": PytestAdapter(), "vitest": VitestAdapter(), "jest": JestAdapter()}
     if configured in adapters:

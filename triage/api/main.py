@@ -7,6 +7,7 @@ from triage.api.routes.investigations import router as investigations_router, re
 from triage.api.routes.webhooks import router as webhooks_router
 from triage.api.routes.live_demo import router as live_demo_router
 from triage.api.routes.evaluation import router as evaluation_router
+from triage.api.routes.runners import router as runners_router
 from triage.config.settings import Settings
 from triage.core.logging import configure_logging
 from triage.persistence.database import create_session_factory
@@ -22,6 +23,7 @@ app.include_router(artifacts_router)
 app.include_router(webhooks_router)
 app.include_router(live_demo_router)
 app.include_router(evaluation_router)
+app.include_router(runners_router)
 
 
 @app.get("/health")

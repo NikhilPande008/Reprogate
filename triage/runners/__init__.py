@@ -6,6 +6,20 @@ and RSpec remain future adapter targets; selecting them fails rather than
 guessing.
 """
 
-from triage.runners.adapters import RunnerAdapter, RunnerSelectionError, select_runner
+from triage.runners.adapters import (
+    RUNNER_CAPABILITIES,
+    RunnerAdapter,
+    RunnerCapability,
+    RunnerSelectionError,
+    runner_capabilities,
+    select_runner,
+)
 
-__all__ = ["RunnerAdapter", "RunnerSelectionError", "select_runner"]
+__all__ = [
+    "RUNNER_CAPABILITIES",
+    "RunnerAdapter",
+    "RunnerCapability",
+    "RunnerSelectionError",
+    "runner_capabilities",
+    "select_runner",
+]
