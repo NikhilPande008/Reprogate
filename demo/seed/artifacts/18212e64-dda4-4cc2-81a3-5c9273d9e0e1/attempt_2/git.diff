@@ -1,0 +1,42 @@
+diff --git a/tests/test_call_model_input_filter.py b/tests/test_call_model_input_filter.py
+index 3ae86206..e176c39f 100644
+--- a/tests/test_call_model_input_filter.py
++++ b/tests/test_call_model_input_filter.py
+@@ -3,6 +3,7 @@ from __future__ import annotations
+ from typing import Any, cast
+ 
+ import pytest
++from openai.types.chat.completion_create_params import ResponseFormat
+ 
+ from agents import Agent, RunConfig, Runner, TResponseInputItem, UserError
+ from agents.run import CallModelData, ModelInputData
+@@ -39,6 +40,29 @@ async def test_call_model_input_filter_sync_non_streamed() -> None:
+     assert model.last_turn_args["input"][-1]["content"] == "added-sync"
+ 
+ 
++@pytest.mark.asyncio
++async def test_call_model_input_filter_accepts_custom_response_format() -> None:
++    model = FakeModel()
++    agent = Agent(name="test", model=model)
++    model.set_next_output([get_text_message("ok")])
++    response_format: ResponseFormat = {"type": "json_object"}
++
++    def filter_fn(data: CallModelData[Any]) -> ModelInputData:
++        return ModelInputData(
++            input=data.model_data.input,
++            instructions=data.model_data.instructions,
++            response_format=response_format,
++        )
++
++    await Runner.run(
++        agent,
++        input="start",
++        run_config=RunConfig(call_model_input_filter=filter_fn),
++    )
++
++    assert model.last_turn_args["response_format"] == response_format
++
++
+ @pytest.mark.asyncio
+ async def test_call_model_input_filter_async_streamed() -> None:
+     model = FakeModel()

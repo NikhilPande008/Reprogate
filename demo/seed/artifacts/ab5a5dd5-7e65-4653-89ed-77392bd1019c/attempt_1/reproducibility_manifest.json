@@ -1,0 +1,69 @@
+{
+  "artifacts": {
+    "git.diff": {
+      "path": "artifacts/ab5a5dd5-7e65-4653-89ed-77392bd1019c/attempt_1/git.diff",
+      "sha256": "dbfcd0f22ffb5260c2d41ee47860ae9234c96afe0854ce95286a4b37f0e7aebe"
+    },
+    "junit.xml": {
+      "path": "artifacts/ab5a5dd5-7e65-4653-89ed-77392bd1019c/attempt_1/junit.xml",
+      "sha256": "a270e1b9b9227609e5838266f70effeb4343184357fb2d285ab5e59e0a5cffe8"
+    },
+    "pytest_output.txt": {
+      "path": "artifacts/ab5a5dd5-7e65-4653-89ed-77392bd1019c/attempt_1/pytest_output.txt",
+      "sha256": "636547f114fb793cf43f91b9e400894a773ef1287c0e8badaf07d93d2d8f7935"
+    },
+    "terminal.log": {
+      "path": "artifacts/ab5a5dd5-7e65-4653-89ed-77392bd1019c/attempt_1/terminal.log",
+      "sha256": "952d427eb5076cbd730ceae3740760ea5fa97032a6657db2b4c749511a7cb9bf"
+    }
+  },
+  "confirmation_boundary": {
+    "auth_mount": false,
+    "codex_invocation": false,
+    "container_role": "test",
+    "network_policy": "allowed"
+  },
+  "confirmation_runs": 2,
+  "dependency_snapshot": "annotated-doc==0.0.5\nannotated-types==0.8.0\nanyio==4.14.2\nattrs==26.1.0\nblis==1.3.3\ncatalogue==2.0.10\ncertifi==2026.7.22\ncffi==2.1.0\ncharset-normalizer==3.4.9\nclick==8.4.2\ncloudpathlib==0.24.0\nconfection==1.3.3\ncoverage==7.15.3\ncryptography==50.0.0\ncymem==2.0.13\ndistro==1.9.0\nfilelock==3.32.2\ngriffelib==2.1.0\nh11==0.16.0\nhttpcore==1.0.9\nhttpx==0.28.1\nhttpx-sse==0.4.3\nhypothesis==6.165.0\nidna==3.18\niniconfig==2.3.0\nJinja2==3.1.6\njiter==0.16.0\njsonschema==4.26.0\njsonschema-specifications==2025.9.1\nmarkdown-it-py==4.2.0\nMarkupSafe==3.0.3\nmcp==1.29.0\nmdurl==0.1.2\nmurmurhash==1.0.15\nnumpy==2.4.6\nopenai==2.52.0\nopenai-agents==0.19.2\n-e git+https://github.com/openai/openai-guardrails-python.git@7a245f0b49e55b1577090570a1c115f4db6e6c0d#egg=openai_guardrails\npackaging==26.2\nphonenumbers==9.0.36\npluggy==1.6.0\npreshed==3.0.13\npresidio_analyzer==2.2.364\npycparser==3.0\npydantic==2.13.4\npydantic-settings==2.14.2\npydantic_core==2.46.4\nPygments==2.20.0\nPyJWT==2.13.0\npytest==9.1.1\npytest-asyncio==1.4.0\npytest-cov==7.1.0\npython-dotenv==1.2.2\npython-multipart==0.0.32\nPyYAML==6.0.3\nreferencing==0.37.0\nregex==2026.7.19\nrequests==2.34.2\nrequests-file==3.0.1\nrich==15.0.0\nrpds-py==2026.6.3\nsetuptools==83.0.0\nshellingham==1.5.4\nsmart_open==8.0.1\nsniffio==1.3.1\nsortedcontainers==2.4.0\nspacy==3.8.14\nspacy-legacy==3.0.12\nspacy-loggers==1.0.5\nsrsly==2.5.3\nsse-starlette==3.4.6\nstarlette==1.3.1\nthinc==8.3.13\ntldextract==5.3.1\ntqdm==4.70.0\ntyper==0.27.1\ntyping-inspection==0.4.2\ntyping_extensions==4.16.0\nurllib3==2.7.0\nuvicorn==0.52.1\nwasabi==1.1.3\nweasel==1.0.0\nwebsockets==16.1.1\nwrapt==2.3.0\n\n-- node --\n{}\n",
+  "execution_failure_reason": null,
+  "focused_test_command": "python -m pytest -q --junitxml='/tmp/triage-ab5a5dd5-7e65-4653-89ed-77392bd1019c-attempt_1-junit.xml' 'tests/unit/test_agents.py::test_create_default_tool_context_forwards_proxy_configuration'",
+  "focused_test_selection": {
+    "path": "artifacts/ab5a5dd5-7e65-4653-89ed-77392bd1019c/attempt_1/focused_test_selection.json",
+    "sha256": "8369ae98b356592784edb0680fb3196d863b7031d0be0f7aa0b9af1a9e88112b"
+  },
+  "investigation_agent_provider": "codex",
+  "lockfile_sha256": null,
+  "network_policy": "allowed",
+  "operating_system": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "phase_boundaries": {
+    "agent": {
+      "auth_mount": true,
+      "network_policy": "allowed"
+    },
+    "setup": {
+      "auth_mount": false,
+      "network_policy": "allowed"
+    },
+    "test": {
+      "auth_mount": false,
+      "network_policy": "allowed"
+    }
+  },
+  "recorded_at": "2026-08-03T14:51:13.174283+00:00",
+  "repository": "openai/openai-guardrails-python",
+  "repository_commit": "7a245f0b49e55b1577090570a1c115f4db6e6c0d",
+  "runner": "pytest",
+  "runner_exit_code": 1,
+  "runtime": "Python 3.12.13\nv22.23.1\n10.9.8",
+  "sandbox_image_digests": [
+    "github-issue-triage@sha256:4e895739ae5ee53da3bed17da87b498e42be48567c3b154cb8473e1499377cd9"
+  ],
+  "sandbox_image_id": "sha256:4e895739ae5ee53da3bed17da87b498e42be48567c3b154cb8473e1499377cd9",
+  "setup_command": "python -m pip install -e . pytest pytest-asyncio hypothesis pytest-cov",
+  "setup_reason": "explicit SANDBOX_SETUP_COMMAND",
+  "structured_results_path": "artifacts/ab5a5dd5-7e65-4653-89ed-77392bd1019c/attempt_1/junit.xml",
+  "timeouts": {
+    "dependency_seconds": 600,
+    "overall_seconds": 900
+  }
+}

@@ -75,12 +75,17 @@ Database migration head is `0023_live_demo_progress`.
 
 ## Evidence already demonstrated
 
-- Offline demo seed: five selectively exported investigations and 68 referenced
+- Offline demo seed: five selectively exported investigations and 74 referenced
   artifacts across `psf/requests`, `openai/openai-agents-python`, and
-  `openai/openai-guardrails-python`. It includes the modern #7564 flagship
-  confirmation with exact target/JUnit/proof-integrity/confirmation provenance, two
-  cross-repository confirmations, `NEEDS_INFO`, and `WONT_REPRO`/
-  `COMPLETED_NO_GAP` evidence.
+  `openai/openai-guardrails-python`. All three confirmations now carry modern
+  provenance and pass all seven deterministic checks; the seed contains no
+  `LEGACY_EVIDENCE_INCOMPLETE` record. It includes the #7564 flagship
+  confirmation, two cross-repository confirmations, `NEEDS_INFO`, and
+  `WONT_REPRO`/`COMPLETED_NO_GAP` evidence.
+- 2026-08-03 re-runs of the two cross-repository confirmations, read-only, to
+  replace their pre-JUnit provenance. Both confirmed independently and landed on
+  the same test paths as the original run: `tests/unit/test_agents.py`
+  (Guardrails #70) and `tests/test_call_model_input_filter.py` (Agents #3563).
 - 2026-07-21 cross-repository live run, read-only and sequential:
 
   | Repository | Issues | Distribution |
@@ -155,7 +160,7 @@ Database migration head is `0023_live_demo_progress`.
 Last full verified test/build baseline:
 
 ```text
-.venv/bin/python -m pytest -q      # 217 passed, 7 skipped
+.venv/bin/python -m pytest -q      # 221 passed, 7 skipped
 cd dashboard && npm test -- --run  # 70 tests across 26 files passed
 cd dashboard && npm run build      # passed
 ```

@@ -1,32 +1,33 @@
 diff --git a/tests/unit/test_agents.py b/tests/unit/test_agents.py
-index 54cf56b..0846af1 100644
+index 54cf56b..d20ab07 100644
 --- a/tests/unit/test_agents.py
 +++ b/tests/unit/test_agents.py
-@@ -246,6 +246,30 @@ def test_create_default_tool_context_provides_async_client(monkeypatch: pytest.M
+@@ -246,6 +246,31 @@ def test_create_default_tool_context_provides_async_client(monkeypatch: pytest.M
      assert isinstance(context.guardrail_llm, StubAsyncOpenAI)  # noqa: S101
  
  
-+def test_create_default_tool_context_preserves_litellm_proxy_configuration(
++def test_create_default_tool_context_forwards_proxy_configuration(
 +    monkeypatch: pytest.MonkeyPatch,
 +) -> None:
-+    """Tool guardrail client should receive LiteLLM proxy settings."""
++    """Default tool context should configure its client for a proxy."""
 +    openai_mod = types.ModuleType("openai")
++    captured_kwargs: dict[str, Any] = {}
 +
 +    class StubAsyncOpenAI:
 +        def __init__(self, **kwargs: Any) -> None:
-+            self.kwargs = kwargs
++            captured_kwargs.update(kwargs)
 +
 +    openai_mod.AsyncOpenAI = StubAsyncOpenAI
 +    monkeypatch.setitem(sys.modules, "openai", openai_mod)
 +
-+    context = agents._create_default_tool_context(
-+        api_key="litellm-proxy-key",
-+        base_url="http://litellm-proxy.example/v1",
++    agents._create_default_tool_context(
++        api_key="proxy-key",
++        base_url="https://litellm.example/v1",
 +    )
 +
-+    assert context.guardrail_llm.kwargs == {  # type: ignore[attr-defined]  # noqa: S101
-+        "api_key": "litellm-proxy-key",
-+        "base_url": "http://litellm-proxy.example/v1",
++    assert captured_kwargs == {  # noqa: S101
++        "api_key": "proxy-key",
++        "base_url": "https://litellm.example/v1",
 +    }
 +
 +

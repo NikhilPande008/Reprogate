@@ -146,7 +146,7 @@ Docker-dependent smoke tests for the same boundary live in
 `tests/integration/test_docker_role_boundary_smoke.py` and
 `tests/integration/test_docker_codex_compatibility_smoke.py`.
 
-Full suite: `.venv/bin/python -m pytest -q` — 217 passed, 7 skipped.
+Full suite: `.venv/bin/python -m pytest -q` — 221 passed, 7 skipped.
 
 ## Related documentation
 

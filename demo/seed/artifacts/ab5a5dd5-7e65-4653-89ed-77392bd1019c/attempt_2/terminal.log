@@ -1,0 +1,70 @@
+CONFIRMATION EXECUTION (no Codex)
+$ python -m pytest -q --junitxml='/tmp/triage-ab5a5dd5-7e65-4653-89ed-77392bd1019c-attempt_2-junit.xml' 'tests/unit/test_agents.py::test_create_default_tool_context_forwards_proxy_configuration'
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_create_default_tool_context_forwards_proxy_configuration _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xffff75a28680>
+
+    def test_create_default_tool_context_forwards_proxy_configuration(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Default tool context should configure its client for a proxy."""
+        openai_mod = types.ModuleType("openai")
+        captured_kwargs: dict[str, Any] = {}
+    
+        class StubAsyncOpenAI:
+            def __init__(self, **kwargs: Any) -> None:
+                captured_kwargs.update(kwargs)
+    
+        openai_mod.AsyncOpenAI = StubAsyncOpenAI
+        monkeypatch.setitem(sys.modules, "openai", openai_mod)
+    
+>       agents._create_default_tool_context(
+            api_key="proxy-key",
+            base_url="https://litellm.example/v1",
+        )
+E       TypeError: _create_default_tool_context() got an unexpected keyword argument 'api_key'
+
+tests/unit/test_agents.py:263: TypeError
+=========================== short test summary info ============================
+FAILED tests/unit/test_agents.py::test_create_default_tool_context_forwards_proxy_configuration
+1 failed in 0.39s
+[exit 1]
+$ git diff --no-ext-diff
+diff --git a/tests/unit/test_agents.py b/tests/unit/test_agents.py
+index 54cf56b..d20ab07 100644
+--- a/tests/unit/test_agents.py
++++ b/tests/unit/test_agents.py
+@@ -246,6 +246,31 @@ def test_create_default_tool_context_provides_async_client(monkeypatch: pytest.M
+     assert isinstance(context.guardrail_llm, StubAsyncOpenAI)  # noqa: S101
+ 
+ 
++def test_create_default_tool_context_forwards_proxy_configuration(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """Default tool context should configure its client for a proxy."""
++    openai_mod = types.ModuleType("openai")
++    captured_kwargs: dict[str, Any] = {}
++
++    class StubAsyncOpenAI:
++        def __init__(self, **kwargs: Any) -> None:
++            captured_kwargs.update(kwargs)
++
++    openai_mod.AsyncOpenAI = StubAsyncOpenAI
++    monkeypatch.setitem(sys.modules, "openai", openai_mod)
++
++    agents._create_default_tool_context(
++        api_key="proxy-key",
++        base_url="https://litellm.example/v1",
++    )
++
++    assert captured_kwargs == {  # noqa: S101
++        "api_key": "proxy-key",
++        "base_url": "https://litellm.example/v1",
++    }
++
++
+ def test_attach_guardrail_to_tools_initializes_lists() -> None:
+     """Attaching guardrails should create input/output lists when missing."""
+     tool = SimpleNamespace()

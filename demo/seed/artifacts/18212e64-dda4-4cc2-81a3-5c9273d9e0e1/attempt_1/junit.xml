@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.070" timestamp="2026-08-03T15:10:50.212312+00:00" hostname="cd88063ea93a"><testcase classname="tests.test_call_model_input_filter" name="test_call_model_input_filter_accepts_custom_response_format" time="0.002"><failure message="TypeError: ModelInputData.__init__() got an unexpected keyword argument 'response_format'">@pytest.mark.asyncio
+    async def test_call_model_input_filter_accepts_custom_response_format() -&gt; None:
+        model = FakeModel()
+        agent = Agent(name="test", model=model)
+        model.set_next_output([get_text_message("ok")])
+        response_format: ResponseFormat = {"type": "json_object"}
+    
+        def filter_fn(data: CallModelData[Any]) -&gt; ModelInputData:
+            return ModelInputData(
+                input=data.model_data.input,
+                instructions=data.model_data.instructions,
+                response_format=response_format,
+            )
+    
+&gt;       await Runner.run(
+            agent,
+            input="start",
+            run_config=RunConfig(call_model_input_filter=filter_fn),
+        )
+
+tests/test_call_model_input_filter.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/agents/run.py:274: in run
+    return await runner.run(
+src/agents/run.py:1312: in run
+    turn_result = await model_task
+                  ^^^^^^^^^^^^^^^^
+src/agents/run_internal/run_loop.py:1955: in run_single_turn
+    new_response = await get_new_response(
+src/agents/run_internal/run_loop.py:2010: in get_new_response
+    filtered = await maybe_filter_model_input(
+src/agents/run_internal/turn_preparation.py:76: in maybe_filter_model_input
+    maybe_updated = run_config.call_model_input_filter(filter_payload)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = CallModelData(model_data=ModelInputData(input=[{'content': 'start', 'role': 'user'}], instructions=None), agent=Agent(..._guardrails=[], output_type=None, hooks=None, tool_use_behavior='run_llm_again', reset_tool_choice=True), context=None)
+
+    def filter_fn(data: CallModelData[Any]) -&gt; ModelInputData:
+&gt;       return ModelInputData(
+            input=data.model_data.input,
+            instructions=data.model_data.instructions,
+            response_format=response_format,
+        )
+E       TypeError: ModelInputData.__init__() got an unexpected keyword argument 'response_format'
+
+tests/test_call_model_input_filter.py:51: TypeError</failure></testcase></testsuite></testsuites>

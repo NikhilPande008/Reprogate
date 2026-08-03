@@ -69,7 +69,8 @@ that trail is generated prose — it is what the container actually produced.
 The committed demo snapshot contains five selectively exported investigations:
 Requests #7564; Agents SDK #3563, #3611, and #3654; and Guardrails #70. It
 contains three behavior-gap confirmations, one `NEEDS_INFO`, one
-`WONT_REPRO`/`COMPLETED_NO_GAP` outcome, and 68 referenced artifacts. The live
+`WONT_REPRO`/`COMPLETED_NO_GAP` outcome, and 74 referenced artifacts. All three
+confirmations pass all seven deterministic checks. The live
 database is never copied wholesale when the demo is refreshed.
 
 ### What a confirmation does and does not mean
