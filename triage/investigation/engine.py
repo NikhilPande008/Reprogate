@@ -10,6 +10,7 @@ from triage.investigation.models import AttemptExecution, AttemptRecord, Investi
 from triage.investigation.prompts import render_codex_prompt
 from triage.investigation.runner import attempt_artifact_dir
 from triage.persistence.models import Artifact, Hypothesis, Investigation, LLMCall
+from triage.sandbox.container import CodexAgentUnavailable
 from triage.sandbox.manager import EnvironmentSetupFailure
 from triage.validation.models import ValidationEvidence, ValidationResult
 from triage.validation.proof_integrity import analyze as analyze_proof_integrity, write_report
@@ -102,6 +103,17 @@ class InvestigationEngine:
             except EnvironmentSetupFailure as error:
                 if error.execution is not None:
                     self._record_attempt_artifacts(investigation.id, error.execution)
+                self.investigations.update(
+                    investigation,
+                    status=InvestigationStatus.FAILED,
+                    asserts_failure=False,
+                    validation_reason=str(error),
+                )
+                raise
+            except CodexAgentUnavailable as error:
+                # The agent never ran, so there is no evidence to classify. This
+                # is an operational failure and must never be recorded as a
+                # bounded outcome about the repository.
                 self.investigations.update(
                     investigation,
                     status=InvestigationStatus.FAILED,

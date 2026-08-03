@@ -31,6 +31,22 @@ class CodexSandboxUnavailable(RuntimeError):
         self.fallback = fallback
 
 
+class CodexAgentUnavailable(RuntimeError):
+    """The agent never ran: credentials, quota, or entitlement blocked invocation.
+
+    This must not reach the validator. An agent that could not start produces an
+    empty diff, which is indistinguishable at the diff layer from an agent that
+    ran and chose to change nothing — but the two mean opposite things. Treating
+    the first as evidence would let an infrastructure fault be reported as a
+    bounded finding about the repository.
+    """
+
+    def __init__(self, reason: str, execution: ContainerCommandResult):
+        super().__init__(f"Codex could not be invoked: {reason}")
+        self.reason = reason
+        self.execution = execution
+
+
 class SandboxTimeout(RuntimeError):
     pass
 
@@ -96,6 +112,7 @@ class DockerSandboxContainer:
             timeout_seconds,
         )
         if not _requires_docker_isolated_fallback(preferred.output):
+            _reject_unavailable_agent(preferred)
             return CodexExecutionResult(preferred, preferred, None)
 
         fallback = self.run(
@@ -104,6 +121,7 @@ class DockerSandboxContainer:
         )
         if _requires_docker_isolated_fallback(fallback.output):
             raise CodexSandboxUnavailable(preferred, fallback)
+        _reject_unavailable_agent(fallback)
         return CodexExecutionResult(fallback, preferred, fallback)
 
     def write_artifact(self, path: str, content: str) -> None:
@@ -129,6 +147,34 @@ class DockerSandboxContainer:
 
 def _requires_docker_isolated_fallback(output: str) -> bool:
     return "bwrap: No permissions to create a new namespace" in output
+
+
+# Deliberately narrow. Each marker means the CLI refused to start work at all.
+# A broader match risks reclassifying a real investigation as an outage, which
+# would hide genuine evidence just as badly as the reverse.
+_AGENT_UNAVAILABLE_MARKERS: tuple[tuple[str, str], ...] = (
+    ("hit your usage limit", "the configured Codex account has no remaining usage quota"),
+    ("Upgrade to Plus to continue using Codex", "the configured Codex account lacks the required entitlement"),
+    ("Please run `codex login`", "no usable Codex credential is mounted"),
+    ("Not logged in", "no usable Codex credential is mounted"),
+    ("invalid_api_key", "the mounted Codex credential was rejected"),
+    ("Incorrect API key provided", "the mounted Codex credential was rejected"),
+    ("401 Unauthorized", "the mounted Codex credential was rejected"),
+)
+
+
+def _agent_unavailable_reason(output: str) -> str | None:
+    for marker, reason in _AGENT_UNAVAILABLE_MARKERS:
+        if marker in output:
+            return reason
+    return None
+
+
+def _reject_unavailable_agent(execution: ContainerCommandResult) -> None:
+    """Fail loudly when the agent never ran, instead of returning an empty diff."""
+    reason = _agent_unavailable_reason(execution.output)
+    if reason is not None:
+        raise CodexAgentUnavailable(reason, execution)
 
 
 def _shell_quote(value: str) -> str:
