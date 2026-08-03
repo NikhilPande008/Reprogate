@@ -11,12 +11,13 @@ import { LiveDemo } from "./pages/LiveDemo";
 import { CompareApproaches } from "./pages/CompareApproaches";
 import { RetrospectiveEvaluation } from "./pages/RetrospectiveEvaluation";
 import { JudgeDemoTour } from "./pages/JudgeDemoTour";
+import { RunnerCapability } from "./pages/RunnerCapability";
 import { api } from "./services/api";
 import "./styles.css";
 
 export function Header() {
   const [live, setLive] = useState(false); useEffect(() => { api.liveDemoConfig().then((config) => setLive(config.enabled)).catch(() => undefined); }, []);
-  return <header className="app-header"><div className="shell header-content"><a className="brand" href="/" aria-label="ReproGate, investigation list"><span className="brand-mark" aria-hidden="true">RG</span><span className="brand-copy"><strong>ReproGate</strong><small>Evidence-first GitHub issue investigation</small></span></a><nav className="header-links" aria-label="Primary"><a href="/">Triage Queue</a><a href="?demo=1">Demo Tour</a><a href="?brief=1">Evidence Brief</a><a href="?results=1">Evidence Results</a><a href="?compare=1">Why evidence?</a><a href="?evaluation=1">Retrospective evaluation</a>{live && <a href="?live=1">Live demo</a>}</nav></div></header>;
+  return <header className="app-header"><div className="shell header-content"><a className="brand" href="/" aria-label="ReproGate, investigation list"><span className="brand-mark" aria-hidden="true">RG</span><span className="brand-copy"><strong>ReproGate</strong><small>Evidence-first GitHub issue investigation</small></span></a><nav className="header-links" aria-label="Primary"><a href="/">Triage Queue</a><a href="?demo=1">Demo Tour</a><a href="?brief=1">Evidence Brief</a><a href="?results=1">Evidence Results</a><a href="?compare=1">Why evidence?</a><a href="?runners=1">Runner capability</a><a href="?evaluation=1">Retrospective evaluation</a>{live && <a href="?live=1">Live demo</a>}</nav></div></header>;
 }
 
 export function App() {
@@ -30,6 +31,7 @@ export function App() {
   const compareMode = () => new URLSearchParams(window.location.search).get("compare") === "1";
   const evaluationMode = () => new URLSearchParams(window.location.search).get("evaluation") === "1";
   const demoMode = () => new URLSearchParams(window.location.search).get("demo") === "1";
+  const runnersMode = () => new URLSearchParams(window.location.search).get("runners") === "1";
   const [id, setId] = useState(currentId);
   const [reviewer, setReviewer] = useState(reviewerMode);
   const [packet, setPacket] = useState(reviewerPacket);
@@ -40,12 +42,13 @@ export function App() {
   const [compare, setCompare] = useState(compareMode);
   const [evaluation, setEvaluation] = useState(evaluationMode);
   const [demo, setDemo] = useState(demoMode);
+  const [runners, setRunners] = useState(runnersMode);
   useEffect(() => {
-    const syncLocation = () => { setId(currentId()); setReviewer(reviewerMode()); setPacket(reviewerPacket()); setReports(reportsMode()); setBrief(briefMode()); setResults(resultsMode()); setLive(liveMode()); setCompare(compareMode()); setEvaluation(evaluationMode()); setDemo(demoMode()); };
+    const syncLocation = () => { setId(currentId()); setReviewer(reviewerMode()); setPacket(reviewerPacket()); setReports(reportsMode()); setBrief(briefMode()); setResults(resultsMode()); setLive(liveMode()); setCompare(compareMode()); setEvaluation(evaluationMode()); setDemo(demoMode()); setRunners(runnersMode()); };
     window.addEventListener("popstate", syncLocation);
     return () => window.removeEventListener("popstate", syncLocation);
   }, []);
-  return <><Header /><main className="shell">{demo ? <JudgeDemoTour /> : evaluation ? <RetrospectiveEvaluation /> : compare ? <CompareApproaches /> : live ? <LiveDemo /> : results ? <EvidenceResults /> : brief ? <EvidenceBrief /> : reviewer ? reports ? <WeeklyReportPage /> : packet ? <ReviewerPacket packetId={packet} /> : <ReviewerQueue /> : id ? <InvestigationDetail id={id} /> : <Investigations />}</main></>;
+  return <><Header /><main className="shell">{demo ? <JudgeDemoTour /> : runners ? <RunnerCapability /> : evaluation ? <RetrospectiveEvaluation /> : compare ? <CompareApproaches /> : live ? <LiveDemo /> : results ? <EvidenceResults /> : brief ? <EvidenceBrief /> : reviewer ? reports ? <WeeklyReportPage /> : packet ? <ReviewerPacket packetId={packet} /> : <ReviewerQueue /> : id ? <InvestigationDetail id={id} /> : <Investigations />}</main></>;
 }
 
 const root = document.getElementById("root");

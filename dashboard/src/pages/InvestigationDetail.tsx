@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { CopyButton } from "../components/CopyButton";
 import { EvidenceViewer } from "../components/EvidenceViewer";
 import { NextActions } from "../components/NextActions";
+import { RelatedInvestigations } from "../components/RelatedInvestigations";
 import { SemanticReviewCard } from "../components/SemanticReviewCard";
 import { ValidationExplainer } from "../components/ValidationExplainer";
 import { StatusBadge } from "../components/StatusBadge";
@@ -42,6 +43,7 @@ export function InvestigationDetail({ id }: { id: string }) {
     <NextActions summary={summary} artifacts={artifacts} semanticReview={semanticReview} />
     {job && <section className="card"><h2>Webhook and comment</h2><p><b>Job:</b> <StatusBadge value={job.status} /></p><p><b>Comment:</b> <StatusBadge value={job.comment_status} /> {job.is_preview ? "Preview only — not posted to GitHub." : job.github_comment_id ? "Posted to GitHub." : "Not posted to GitHub."}</p><p>{job.comment_reason ?? ""}</p>{job.comment_body && <pre className="validation-reason">{job.comment_body}</pre>}</section>}
     <Timeline attempts={timeline} />
+    <RelatedInvestigations data={related} />
     <EvidenceViewer artifacts={artifacts} loading={loadingArtifacts} />
     <section className="card"><h2>Validation</h2><div className="validation-line"><b>assertsFailure:</b> <StatusBadge value={summary.asserts_failure} /> <ValidationHelp kind="assertsFailure" /></div><div className="validation-line"><b>Validation reason:</b> <ValidationHelp kind="validation reason" /></div><p className="validation-reason">{summary.validation_reason ?? "—"}</p><p className="metadata">Reproducibility: {summary.reproducibility_status ?? "LEGACY"}</p>{summary.validation_provenance && <p className="metadata">Validated from structured test results; terminal output is shown for context.</p>}</section>
   </section>;

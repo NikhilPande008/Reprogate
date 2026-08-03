@@ -56,6 +56,20 @@ export interface RelatedInvestigation {
   label: string;
 }
 
+export interface RunnerCapability {
+  runner_id: string;
+  implemented: boolean;
+  confirmation_capable: boolean;
+  selection_precision: string;
+  structured_results: string;
+  summary: string;
+  constraint: string;
+  recorded_investigations: number;
+  recorded_confirmations: number;
+}
+
+export interface RunnerCapabilityMatrix { schema_version: string; items: RunnerCapability[]; caveats: string[]; }
+
 export interface TimelineAttempt {
   attempt_number: number;
   hypothesis: string;
@@ -107,7 +121,7 @@ export interface SemanticReview { packet_status: "AVAILABLE" | "NOT_ISSUED" | "U
 export interface PilotPacket { id: string; version: number; investigation_id: string; repository: string; issue_number: number; issue_title: string | null; evidence: SemanticEvidence; state: string; display_state: string; coverage: Record<string, number>; }
 export interface AssessmentInput { extraction_aligned: string; test_aligned: string; failure_supports_signal: string; public_comment_appropriate: string; confidence: string; rationale?: string; reason_tags?: string[]; supersedes_assessment_id?: string | null; }
 export interface ValidationCheck { id: string; label: string; status: "PASS" | "FAIL" | "UNAVAILABLE" | "NOT_APPLICABLE"; explanation: string; artifact_kind: string | null; }
-export interface ValidationExplainer { version: string; conclusion: "BEHAVIOR_GAP_CONFIRMED" | "BEHAVIOR_GAP_NOT_ESTABLISHED"; checks: ValidationCheck[]; }
+export interface ValidationExplainer { version: string; conclusion: "BEHAVIOR_GAP_CONFIRMED" | "BEHAVIOR_GAP_NOT_ESTABLISHED" | "LEGACY_EVIDENCE_INCOMPLETE"; stored_classification?: Classification | null; passed_checks?: number; total_checks?: number; checks: ValidationCheck[]; }
 export interface LiveDemoConfig { enabled: boolean; repositories: string[]; issue_numbers: number[]; allow_any_issue: boolean; max_concurrent_runs: number; reason: string | null; }
 export interface LiveDemoProgress { id: string; status: string; stage: string; detail: string; terminal: boolean; investigation_id: string | null; }
 export interface RetrospectiveSource { url: string; source_type: string; title: string; captured_at: string; }
@@ -130,6 +144,7 @@ export const api = {
   liveDemoConfig: () => request<LiveDemoConfig>("/demo/live/config"),
   startLiveDemo: (repository: string, issue_number: number, token?: string) => request<{ id: string; status: string }>("/demo/live/investigations", { method: "POST", headers: { "Content-Type": "application/json", ...(token ? { "X-Live-Demo-Token": token } : {}) }, body: JSON.stringify({ repository, issue_number, confirm_live_run: true }) }),
   liveDemoProgress: (id: string) => request<LiveDemoProgress>(`/demo/live/investigations/${id}`),
+  runnerCapability: () => request<RunnerCapabilityMatrix>("/runners"),
   retrospectiveEvaluation: () => request<RetrospectiveEvaluation>("/evaluation/retrospective"),
   evaluationStatus: () => request<EvaluationStatus>("/evaluation/status"),
   pilotLogin: async (reviewer_id: string, token: string) => { const user = await request<PilotUser>("/pilot-review/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ reviewer_id, token }) }); csrfToken = user.csrf_token; return user; },
