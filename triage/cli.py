@@ -403,3 +403,9 @@ def _classification_label(classification) -> str:
     if classification.value == "BEHAVIOR_GAP_CONFIRMED":
         return "Behavior gap confirmed"
     return classification.value
+
+
+if __name__ == "__main__":
+    # Allows `python -m triage.cli`, which stays correct if the environment's
+    # generated console script is missing or points at a stale interpreter.
+    raise SystemExit(main())

@@ -62,12 +62,12 @@ Runner wording in this report follows the canonical
 | Outcomes | `BEHAVIOR_GAP_CONFIRMED`, `NEEDS_INFO`, `WONT_REPRO`, `NOT_A_BUG`; no primary `DUPLICATE` | A confirmation is not a semantic bug decision |
 | Evidence UI | Queue, details, timeline, structured artifact viewer, diff highlighting, metrics, copy controls, keyboard navigation | Public dashboard does not run, edit, or post anything |
 | Queueing | Durable jobs, leases, retry/backoff, per-repository concurrency, queue limit, batch enqueue mode | SQLite is local single-host only |
-| Costs | Linked OpenAI tokens, latency, versioned local cost calculation, reservations/budgets; Codex wall time | Codex/Claude dollar cost is intentionally unavailable |
+| Costs | Linked OpenAI tokens, latency, versioned local cost calculation, reservations/budgets; Codex wall time | Agent-CLI dollar cost is intentionally unavailable |
 | Related work | Advisory repository-local similarity suggestions | Never relabels an issue as `DUPLICATE` or comments automatically |
 | Human review | Immutable packets, independent assessments, deterministic consensus, per-result approvals | Pilot only; no production SSO/RBAC or automation authority |
 | GitHub workflow | Signed webhook intake and tightly gated worker comments | Default is disabled/dry-run; per-result approval is always required |
 | Evaluation | Privacy-bounded telemetry, weekly reports, consent-gated corpus export, eligibility measurement | No external corpus-based performance claim exists yet |
-| Providers | Typed provider interfaces; OpenAI + Codex defaults; explicitly configured Claude Code adapter | No live benchmark or provider winner claimed |
+| Providers | Typed provider interfaces; OpenAI + Codex defaults; one explicitly configured alternative agent-CLI adapter | No live benchmark or provider winner claimed |
 
 ## 4. End-to-end architecture
 
@@ -75,7 +75,7 @@ Runner wording in this report follows the canonical
 GitHub issue (read only)
   -> validated typed extraction (OpenAI; linked usage)
   -> fresh Docker workspace + repository-specific setup
-  -> bounded Codex/Claude agent attempt to add a focused test
+  -> bounded Codex agent attempt to add a focused test
   -> focused pytest or Vitest command emits JUnit XML
   -> deterministic validator + optional confirmation run
   -> evidence-only classification for non-confirming outcomes
@@ -319,8 +319,8 @@ $0.10 reservation per billable call. Unknown-price OpenAI calls are explicitly
 
 Codex execution is capped by wall time (900 seconds per investigation by
 default) and persists invocation count/seconds, but its dollar cost is unknown.
-Claude Code follows the same unpriced-agent treatment until an attributable
-billing source is available. Infrastructure cost, human-review labor cost, and
+The alternative agent adapter follows the same unpriced-agent treatment until an
+attributable billing source is available. Infrastructure cost, human-review labor cost, and
 fully loaded COGS are not currently measured.
 
 ## 10. Evaluation and semantic-fidelity governance
@@ -383,8 +383,8 @@ or benchmark claims are inferred from existing investigations.
    supply an explicit setup command for such repositories.
 5. **Scale is local-host bounded.** SQLite job claims/budgets are not a
    multi-instance production deployment strategy.
-6. **No alternative provider performance claim.** Claude adapter architecture is
-   present but no approved live comparison has run.
+6. **No alternative provider performance claim.** A second agent-adapter
+   architecture is present but no approved live comparison has run.
 7. **No real commercial evidence yet.** There are no external design partners,
    retention results, willingness-to-pay data, or fully loaded COGS.
 8. **Similarity is advisory.** It is not a duplicate decision engine and does

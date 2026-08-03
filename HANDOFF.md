@@ -2,7 +2,7 @@
 
 ## Last updated
 
-2026-07-24
+2026-08-03
 
 ## Current state
 
@@ -32,7 +32,18 @@ Database migration head is `0023_live_demo_progress`.
 - The read-only “Why this failure counts” explainer reconstructs persisted
   deterministic gate checks for detail pages and the Evidence Brief. New JUnit
   evidence is authoritative; legacy records visibly retain their older
-  provenance and unavailable checks.
+  provenance and unavailable checks. A retained confirmation whose gate
+  artifacts predate structured capture reports `LEGACY_EVIDENCE_INCOMPLETE`
+  with a reconstructible-check count, so it is never displayed as a refutation
+  of its own stored verdict and is never silently upgraded.
+- `/runners` publishes the declared adapter capability matrix beside locally
+  recorded usage counts. Declared capability is explicitly separated from
+  demonstrated evidence, and an unexercised runner reports zero rather than
+  being hidden.
+- `scripts/seed_demo.py` builds the local advisory similarity index after
+  installing the demo. Scoring is lexical and needs no embeddings, network, or
+  credentials, so a completed analysis that matched nothing is distinguishable
+  from an analysis that never ran.
 - New live diffs receive a persisted proof-integrity report before validation.
   It rejects only clear manufactured/unrelated proof patterns and records
   ambiguous anchors or mock failures as human-review flags.
@@ -57,7 +68,8 @@ Database migration head is `0023_live_demo_progress`.
   submit append-only assessments. The `ALIGNED`/`UNCLEAR`/`MISALIGNED` display
   is derived from the four existing judgments and never changes classification.
 - Provider interfaces for extraction, classification, and investigation agent;
-  Codex is default and Claude Code is an explicitly configured alternative.
+  Codex is the default, with one alternative agent-CLI adapter implemented
+  against the same contract and selectable only by explicit configuration.
   The provider-comparison command makes a consented plan only; it does not run
   or declare a winner.
 
@@ -125,7 +137,8 @@ Database migration head is `0023_live_demo_progress`.
 - Semantic fidelity is measured through human review but has no populated,
   independently adjudicated external corpus yet. Automation eligibility is
   measurement only and never removes individual human posting approval.
-- Codex and Claude Code dollar cost are unavailable. The system records their
+- Agent-CLI dollar cost is unavailable for Codex and for the alternative
+  adapter. The system records their
   invocation/wall time but does not invent billing values.
 - Supported live test runners are pytest, Vitest, and Jest. Pytest and the
   conservative static-top-level Vitest subset are confirmation-capable; Jest
@@ -142,8 +155,8 @@ Database migration head is `0023_live_demo_progress`.
 Last full verified test/build baseline:
 
 ```text
-python3 -m pytest -q            # 175 passed, 1 skipped
-cd dashboard && npm test -- --run  # 22 tests across 11 files passed
+.venv/bin/python -m pytest -q      # 217 passed, 7 skipped
+cd dashboard && npm test -- --run  # 70 tests across 26 files passed
 cd dashboard && npm run build      # passed
 ```
 

@@ -39,9 +39,10 @@ GitHub access, OpenAI credentials, Codex authentication, Docker, or a live
 investigation:
 
 ```bash
-uv sync
-uv run python scripts/seed_demo.py
-uv run uvicorn triage.api.main:app --reload
+python3 -m venv .venv
+.venv/bin/pip install -e . httpx pytest
+.venv/bin/python scripts/seed_demo.py
+.venv/bin/python -m uvicorn triage.api.main:app --reload
 ```
 
 In another terminal:

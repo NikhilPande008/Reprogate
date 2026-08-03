@@ -1,33 +1,70 @@
 # ReproGate
 
-Evidence-first, read-only triage for GitHub issues. ReproGate turns a report
-into a bounded executable behavior investigation, preserving the extraction, changed
-test, pytest output, terminal log, diff, deterministic validation, and final
-classification for maintainer review.
+**Turn a GitHub issue into a failing test you can run yourself — or a bounded,
+documented reason it couldn't.**
 
-License: [MIT](LICENSE). Supported host platforms: macOS or Linux with Python
-3.12+, Node.js, and Docker for live investigations. The offline product demo only
-requires Python and Node.js.
+A label asks you to trust it. A failing test asks for nothing.
+
+Automated triage returns "likely a bug" or "needs info" with no way to check it.
+The maintainer either trusts the model or repeats the investigation anyway, so
+the label never saves the work it promised to save. ReproGate ends every
+investigation in evidence instead: a focused test change, the Git diff, the
+terminal output, the structured JUnit result, and a verdict the agent is not
+permitted to issue on its own.
+
+**Codex proposes the test. A deterministic validator decides whether it counts.**
+
+| | |
+| --- | --- |
+| Flagship confirmation | [`psf/requests` #7564](https://github.com/psf/requests/issues/7564) — all 7 deterministic checks passed |
+| [Live cross-repository run](#live-cross-repository-validation--2026-07-21) | 6 issues · 2 behavior gaps confirmed · 4 declined · 0 GitHub writes |
+| Measured cost of that run | ~$0.03 tracked OpenAI spend · ~46s API latency · ~23 min Codex execution |
+| Try it now | `.venv/bin/python scripts/seed_demo.py` — no API keys, no Docker, no GitHub account |
+
+Declining to confirm 4 of 6 is the design, not a shortfall. A verdict this
+system cannot substantiate is one it does not issue.
+
+See [CODEX.md](CODEX.md) for how Codex is used, bounded, and deliberately
+distrusted. License: [MIT](LICENSE). Host platforms: macOS or Linux with Python
+3.12+ and Node.js; Docker additionally for live investigations. The offline demo
+needs only Python and Node.js.
 
 ## Flagship evidence: `psf/requests` #7564
 
-The committed demo opens directly on real persisted evidence for
-[psf/requests #7564](https://github.com/psf/requests/issues/7564), “Raise
-`FileNotFoundError` for missing TLS material.” Investigation
-`cdcbeed9-4c1e-498f-98bd-d550a2da635d` is `COMPLETED`,
-`BEHAVIOR_GAP_CONFIRMED`, and `assertsFailure=true`.
+The issue: *"Raise `FileNotFoundError` for missing TLS material."* The library
+raises a bare `OSError` instead, so callers cannot distinguish a missing
+certificate file from any other I/O failure.
 
-Codex changed the existing certificate-path test to require `FileNotFoundError`,
-`errno.ENOENT`, and the filename. The focused pytest evidence fails on the
-current implementation, which raises `OSError`; the deterministic validator
-confirms that the described behavior is absent in the current code. This confirms
-a behavior gap, not regression provenance or whether the request is a defect,
-feature, documentation change, or intended product behavior. The dashboard exposes the
-raw extraction JSON, terminal log, pytest output, Git diff, exact focused-test
-selection, structured JUnit, proof-integrity report, and confirmation manifests
-for inspection. This modern confirmation demonstrates a difference from the
-generated focused test expectation; it does not determine intended behavior,
-regression status, or maintainer priority.
+Codex changed the existing certificate-path test to demand the specific
+behavior the report describes:
+
+```python
+ def test_invalid_ssl_certificate_files():
+-    with pytest.raises(OSError):
++    with pytest.raises(FileNotFoundError) as exc:
+         Session().get(url, cert=missing_path)
++    assert exc.value.errno == errno.ENOENT
++    assert missing_path in str(exc.value)
+```
+
+That test fails against the current implementation. Every deterministic check
+passed, so the evidence is recorded as `BEHAVIOR_GAP_CONFIRMED`:
+
+| Deterministic check | Result |
+| --- | --- |
+| Changed executable test | PASS |
+| Exact focused-test selection | PASS — `tests/test_requests.py::TestRequests::test_invalid_ssl_certificate_files` |
+| Valid structured JUnit result | PASS — 1 testcase, 1 failure |
+| Explicit assertion failure | PASS |
+| No setup, error, or timeout | PASS |
+| Confirmation rerun matches | PASS |
+| Proof-pattern integrity | PASS |
+
+Investigation `cdcbeed9-4c1e-498f-98bd-d550a2da635d`, `COMPLETED`,
+`assertsFailure=true`. The dashboard exposes the raw extraction JSON, terminal
+log, pytest output, Git diff, exact focused-test selection, structured JUnit,
+proof-integrity report, and confirmation manifests for inspection. Nothing in
+that trail is generated prose — it is what the container actually produced.
 
 The committed demo snapshot contains five selectively exported investigations:
 Requests #7564; Agents SDK #3563, #3611, and #3654; and Guardrails #70. It
@@ -35,15 +72,26 @@ contains three behavior-gap confirmations, one `NEEDS_INFO`, one
 `WONT_REPRO`/`COMPLETED_NO_GAP` outcome, and 68 referenced artifacts. The live
 database is never copied wholesale when the demo is refreshed.
 
+### What a confirmation does and does not mean
+
+A behavior-gap confirmation means one thing precisely: the expectation written
+into the generated focused test is absent from the inspected revision, under the
+recorded conditions. It is deliberately not a claim about regression
+provenance, maintainer priority, or whether the report describes a defect, a
+feature request, a documentation change, or intended product behavior. That
+judgment stays with the maintainer, which is why the evidence is preserved
+rather than summarized.
+
 ## Offline demo: no keys, no rebuild
 
 The tracked [demo snapshot](demo/README.md) lets a reviewer inspect the full
 evidence trail without GitHub, OpenAI, Codex, Docker, or API credentials:
 
 ```bash
-uv sync
-uv run python scripts/seed_demo.py
-uv run uvicorn triage.api.main:app --reload
+python3 -m venv .venv
+.venv/bin/pip install -e . httpx pytest
+.venv/bin/python scripts/seed_demo.py
+.venv/bin/python -m uvicorn triage.api.main:app --reload
 ```
 
 In another terminal:
@@ -54,11 +102,15 @@ npm install
 npm run dev
 ```
 
-Open <http://localhost:5173>. The public maintainer dashboard is read-only: it
-has no issue-comment, label, close, or execution controls. A separate,
-authenticated pilot-reviewer surface is available only when pilot review is
-explicitly enabled; its append-only assessments and approvals never directly
-post to GitHub.
+Open <http://localhost:5173>. **Start at `/?demo=1`** — a five-stage guided
+replay that walks the #7564 evidence from the original report through each
+deterministic gate to the final bounded outcome. It replays persisted records
+only and never invents a successful case.
+
+The public maintainer dashboard is read-only: it has no issue-comment, label,
+close, or execution controls. A separate, authenticated pilot-reviewer surface
+is available only when pilot review is explicitly enabled; its append-only
+assessments and approvals never directly post to GitHub.
 
 `/?compare=1` explains the product’s evidence-first design in under a minute:
 generic AI triage may offer a label or prose, while ReproGate gives
@@ -70,6 +122,52 @@ curated, source-backed seeded investigations. Its public history is deliberately
 classified only as ambiguous or insufficient where it does not establish the
 bounded interpretation. Its Evaluation status panel records that no frozen,
 dual-reviewed accuracy corpus exists. It is not an accuracy benchmark.
+
+## Where the agent stops
+
+Codex does the narrow, repetitive investigation work a maintainer would
+otherwise do by hand: locate the relevant code branch, propose the smallest
+focused executable test, run it, and record the terminal output and diff for
+each attempt. It does not decide the verdict, and it is not asked to grade its
+own test.
+
+- **GPT-5.6 Luna** produces a typed extraction of the issue report and, only
+  after deterministic validation, assigns bounded non-confirming classifications
+  such as `NEEDS_INFO` or `WONT_REPRO`. Its outputs are schema-validated and do
+  not authorize a behavior-gap confirmation.
+- **Codex** works in the isolated agent workspace to propose the smallest
+  focused test change. Its edit is checked by deterministic diff, exact-target,
+  structured-JUnit, proof-integrity, and confirmation gates before evidence can
+  be shown as `BEHAVIOR_GAP_CONFIRMED`.
+
+Neither model can promote its own output to a confirmation. [CODEX.md](CODEX.md)
+documents the full agent boundary: the attempt bound, the container isolation
+model, the credential and network posture per phase, and every capability
+deliberately withheld from the agent.
+
+## How it works
+
+```text
+GitHub issue (read only)
+  -> typed extraction (tracked OpenAI API call)
+  -> up to three Docker-isolated Codex + pytest attempts
+  -> diff + pytest evidence validator
+  -> deterministic behavior-gap confirmation or evidence-only classification
+  -> SQLite + artifacts -> read-only FastAPI + React dashboard
+```
+
+- GitHub REST access is read-only.
+- Every live investigation uses a fresh clone and a short-lived,
+  non-privileged Docker container without the Docker socket.
+- Extraction and evidence classification are validated structured OpenAI calls;
+  their linked, tracked API cost/latency is shown only when recorded. Codex
+  billing is explicitly excluded because exact Codex cost data is unavailable.
+- Detail pages and the Evidence Brief show a persisted-evidence **Maintainer
+  next action**. It is advisory, never modifies GitHub, and distinguishes
+  deterministic confirmation from requests for information, no established
+  behavior gap, possible non-defect framing, and operationally inconclusive
+  work. `NEEDS_INFO` can render a copyable reply from persisted extraction;
+  it is preview-only and is never posted to GitHub.
 
 ## Controlled live demo (disabled by default)
 
@@ -99,50 +197,6 @@ rerun gates all pass. File-only, nested, parameterized, dynamic, or ambiguous
 Vitest tests—and all Jest tests—are diagnostic-only. Unsupported or ambiguous
 setup remains an operational outcome, never a behavior-gap confirmation.
 
-## What Codex accelerated
-
-Codex accelerated the narrow, repetitive investigation work: locating the
-relevant TLS certificate branch, proposing a focused executable behavior test,
-running focused pytest, and recording each attempt’s terminal output and diff.
-It did not decide the verdict. A deterministic validator requires a changed,
-executable pytest test plus an attributable assertion failure before the system
-may emit `BEHAVIOR_GAP_CONFIRMED`; otherwise the evidence is classified conservatively.
-
-## How Codex and GPT-5.6 were used
-
-- **GPT-5.6 Luna** produces a typed extraction of the issue report and, only
-  after deterministic validation, assigns bounded non-confirming classifications
-  such as `NEEDS_INFO` or `WONT_REPRO`. Its outputs are schema-validated and do
-  not authorize a behavior-gap confirmation.
-- **Codex** works in the isolated agent workspace to propose the smallest
-  focused test change. Its edit is checked by deterministic diff, exact-target,
-  structured-JUnit, proof-integrity, and confirmation gates before evidence can
-  be shown as `BEHAVIOR_GAP_CONFIRMED`.
-
-## How it works
-
-```text
-GitHub issue (read only)
-  -> typed extraction (tracked OpenAI API call)
-  -> up to three Docker-isolated Codex + pytest attempts
-  -> diff + pytest evidence validator
-  -> deterministic behavior-gap confirmation or evidence-only classification
-  -> SQLite + artifacts -> read-only FastAPI + React dashboard
-```
-
-- GitHub REST access is read-only.
-- Every live investigation uses a fresh clone and a short-lived,
-  non-privileged Docker container without the Docker socket.
-- Extraction and evidence classification are validated structured OpenAI calls;
-  their linked, tracked API cost/latency is shown only when recorded. Codex
-  billing is explicitly excluded because exact Codex cost data is unavailable.
-- Detail pages and the Evidence Brief show a persisted-evidence **Maintainer
-  next action**. It is advisory, never modifies GitHub, and distinguishes
-  deterministic confirmation from requests for information, no established
-  behavior gap, possible non-defect framing, and operationally inconclusive
-  work. `NEEDS_INFO` can render a copyable reply from persisted extraction;
-  it is preview-only and is never posted to GitHub.
-
 ## Live investigation setup
 
 Live work needs Docker, a Codex authentication file, network access for the
@@ -154,15 +208,14 @@ write:
 
 ```bash
 TRIAGE_TEST_NETWORK_POLICY=allowed \
-uv run triage preflight --repository psf/requests
+.venv/bin/python -m triage.cli preflight --repository psf/requests
 ```
 
 ```bash
-uv sync
-alembic upgrade head
+.venv/bin/python -m alembic upgrade head
 export OPENAI_API_KEY="..."
 export GITHUB_TOKEN="..." # optional, avoids unauthenticated GitHub limits
-uv run triage investigate 7564
+.venv/bin/python -m triage.cli investigate 7564
 ```
 
 ### Network and dependency-setup caveat
@@ -190,7 +243,7 @@ To inspect a local sample without cloning repositories, installing packages, or
 running setup commands, use:
 
 ```bash
-uv run triage setup-readiness-report --repository-path /local/repo-a --repository-path /local/repo-b
+.venv/bin/python -m triage.cli setup-readiness-report --repository-path /local/repo-a --repository-path /local/repo-b
 ```
 
 This produces manifest-readiness evidence only. It is not a substitute for the
@@ -199,7 +252,7 @@ runtime setup-failure measurement on the external 20-repository sample.
 ```bash
 SANDBOX_SETUP_COMMAND='python -m pip install -e . pytest pytest-asyncio pytest-mock pytest-xdist inline-snapshot' \
 DEMO_REPOSITORY=openai/openai-agents-python \
-uv run triage investigate 3654
+.venv/bin/python -m triage.cli investigate 3654
 ```
 
 Use the same explicit command with preflight before starting a run:
@@ -207,7 +260,7 @@ Use the same explicit command with preflight before starting a run:
 ```bash
 TRIAGE_TEST_NETWORK_POLICY=allowed \
 SANDBOX_SETUP_COMMAND='python -m pip install -e . pytest pytest-asyncio pytest-mock pytest-xdist inline-snapshot' \
-uv run triage preflight --repository openai/openai-agents-python
+.venv/bin/python -m triage.cli preflight --repository openai/openai-agents-python
 ```
 
 This command is authoritative: if it fails or times out, the investigation is
@@ -217,7 +270,7 @@ as a behavior gap.
 For sequential, resumable read-only queue processing:
 
 ```bash
-uv run triage batch-triage --repository psf/requests --count 5
+.venv/bin/python -m triage.cli batch-triage --repository psf/requests --count 5
 ```
 
 Preflight validates known unsafe Codex/network configurations before either
@@ -355,7 +408,7 @@ export WEBHOOK_ALLOWED_REPOSITORIES='owner/repository'
 # still safe: workers persist only previews
 export GITHUB_AUTO_POST_ENABLED=false
 export GITHUB_AUTO_POST_DRY_RUN=true
-uv run triage webhook-worker --once
+.venv/bin/python -m triage.cli webhook-worker --once
 ```
 
 For local webhook testing, run the API against a temporary database and send a
@@ -392,7 +445,7 @@ Run one local worker with bounded parallelism:
 ```bash
 export TRIAGE_WORKER_CONCURRENCY=2
 export TRIAGE_WORKER_PER_REPOSITORY_CONCURRENCY=1
-uv run triage worker --drain
+.venv/bin/python -m triage.cli worker --drain
 ```
 
 Defaults are global concurrency `1`, per-repository concurrency `1`, queue
@@ -704,23 +757,26 @@ and unpriced Codex wall-time treatment are unchanged.
 Set `EXTRACTION_PROVIDER=openai`, `CLASSIFICATION_PROVIDER=openai`, and
 `INVESTIGATION_AGENT_PROVIDER=codex`; unsupported values fail clearly and never
 silently fall back. Credentials are configuration-only and are not serialized to
-artifacts, APIs, reports, or review packets. A Claude Code adapter is available,
-but no live cross-provider comparison or semantic-fidelity result has been
-claimed; that still requires consented packets, bounded live runs, and
-independent human assessment.
+artifacts, APIs, reports, or review packets.
 
-## Claude Code investigation adapter
+The adapter boundary exists so the evidence contract, not the vendor, defines
+what counts as a confirmation. One alternative agent-CLI adapter is implemented
+against that contract to keep the interface honest, but no live cross-provider
+comparison or semantic-fidelity result has been claimed; that still requires
+consented packets, bounded live runs, and independent human assessment.
 
-Set `INVESTIGATION_AGENT_PROVIDER=claude_code`, `CLAUDE_CODE_COMMAND`, and
-optionally `CLAUDE_CODE_MODEL` to select the Claude Code CLI adapter. It never
-falls back to Codex. Claude Code currently requires
+## Alternative investigation-agent adapter
+
+An alternative agent-CLI adapter is selectable through
+`INVESTIGATION_AGENT_PROVIDER` with its own command and optional model
+settings. It never silently falls back to Codex. It currently requires
 `TRIAGE_TEST_NETWORK_POLICY=allowed` because its configured credential surface
 needs provider connectivity; focused test execution remains subject to the
-configured sandbox policy. Claude execution is recorded as unpriced agent wall
-time unless an attributable supported billing source is added.
+configured sandbox policy. Its execution is recorded as unpriced agent wall time
+unless an attributable supported billing source is added.
 
 `triage compare-investigation-providers --repository owner/repo --baseline codex
---candidate claude_code --max-examples N --max-wall-seconds S --operator ref
+--candidate <adapter> --max-examples N --max-wall-seconds S --operator ref
 --output path --confirm-evaluation-only` creates a consented bounded comparison
 plan only. It does not run agents, use live credentials, or claim a winner.
 Mechanical completion/validation metrics must remain separate from independent
@@ -731,7 +787,7 @@ network policy supplied beforehand.
 ## Verification
 
 ```bash
-python3 -m pytest -q
+.venv/bin/python -m pytest -q
 cd dashboard && npm test -- --run && npm run build
 ```
 

@@ -19,10 +19,11 @@ performs no GitHub, model, Docker, Codex, or OpenAI calls, and has no API keys
 or credentials.
 
 ```bash
-uv sync
-uv run python scripts/validate_demo_seed.py
-uv run python scripts/seed_demo.py --force
-uv run uvicorn triage.api.main:app --reload
+python3 -m venv .venv
+.venv/bin/pip install -e . httpx pytest
+.venv/bin/python scripts/validate_demo_seed.py
+.venv/bin/python scripts/seed_demo.py --force
+.venv/bin/python -m uvicorn triage.api.main:app --reload
 ```
 
 In another terminal:
